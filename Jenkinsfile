@@ -66,9 +66,9 @@ pipeline {
                                     sourceFiles: '**/*',
                                     excludes: '.git/**, .gitignore, tests/**, test-results/**, phpunit.xml, README.md, Jenkinsfile',
                                     removePrefix: '',
-                                    remoteDirectory: '/var/www/myapp',
+                                    remoteDirectory: '/var/www/php-pipeline',
                                     execCommand: '''
-                                        cd /var/www/myapp
+                                        cd /var/www/php-pipeline
                                         echo "=== Files deployed ==="
                                         ls -la
                                         echo "=== Setting permissions ==="
