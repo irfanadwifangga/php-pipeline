@@ -14,9 +14,9 @@ pipeline {
                 echo 'Installing Composer dependencies...'
                 script {
                     if (isUnix()) {
-                        sh 'composer install --no-interaction --prefer-dist'
+                        sh 'composer install --no-interaction --prefer-dist --no-dev'
                     } else {
-                        bat 'composer install --no-interaction --prefer-dist'
+                        bat 'composer install --no-interaction --prefer-dist --no-dev'
                     }
                 }
             }
@@ -47,9 +47,44 @@ pipeline {
         stage('Archive Results') {
             steps {
                 echo 'Archiving test results...'
-
-                // Menyimpan hasil test
                 junit 'test-results/junit.xml'
+            }
+        }
+        
+        stage('Deploy to VPS') {
+            steps {
+                echo 'Deploying to VPS...'
+                sshPublisher(
+                    continueOnError: false,
+                    failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'pm1cicd',
+                            verbose: true,
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: '**/*',
+                                    excludes: '.git/**, .gitignore, tests/**, test-results/**, phpunit.xml, .env.example, README.md, Jenkinsfile',
+                                    removePrefix: '',
+                                    remoteDirectory: '/var/www/php-pipeline',
+                                    execCommand: '''
+                                        cd /var/www/php-pipeline
+                                        echo "=== Deployment Started ==="
+                                        ls -la
+                                        
+                                        # Set permissions jika diperlukan
+                                        # chmod -R 755 storage bootstrap/cache
+                                        
+                                        # Jika ada .env, copy dari .env.example
+                                        # cp .env.example .env
+                                        
+                                        echo "=== Deployment Completed ==="
+                                    '''
+                                )
+                            ]
+                        )
+                    ]
+                )
             }
         }
     }
@@ -57,6 +92,7 @@ pipeline {
     post {
         success {
             echo 'Pipeline berhasil dijalankan!'
+            echo 'Aplikasi berhasil dideploy ke VPS!'
         }
         failure {
             echo 'Pipeline gagal!'
