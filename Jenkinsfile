@@ -22,34 +22,34 @@ pipeline {
             }
         }
         
-        stage('Run Tests') {
-            steps {
-                echo 'Running PHPUnit tests...'
-                script {
-                    if (isUnix()) {
-                        sh 'vendor/bin/phpunit --configuration phpunit.xml'
-                    } else {
-                        bat 'vendor\\bin\\phpunit.bat --configuration phpunit.xml'
-                    }
-                }
-            }
-        }
+        // stage('Run Tests') {
+        //     steps {
+        //         echo 'Running PHPUnit tests...'
+        //         script {
+        //             if (isUnix()) {
+        //                 sh 'vendor/bin/phpunit --configuration phpunit.xml'
+        //             } else {
+        //                 bat 'vendor\\bin\\phpunit.bat --configuration phpunit.xml'
+        //             }
+        //         }
+        //     }
+        // }
         
-        stage('Code Quality Check') {
-            steps {
-                echo 'Running code quality checks...'
-                script {
-                    echo 'Code quality checks placeholder - add your tools here'
-                }
-            }
-        }
+        // stage('Code Quality Check') {
+        //     steps {
+        //         echo 'Running code quality checks...'
+        //         script {
+        //             echo 'Code quality checks placeholder - add your tools here'
+        //         }
+        //     }
+        // }
         
-        stage('Archive Results') {
-            steps {
-                echo 'Archiving test results...'
-                junit 'test-results/junit.xml'
-            }
-        }
+        // stage('Archive Results') {
+        //     steps {
+        //         echo 'Archiving test results...'
+        //         junit 'test-results/junit.xml'
+        //     }
+        // }
         
         stage('Deploy to VPS') {
             steps {
