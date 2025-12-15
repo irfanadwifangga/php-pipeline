@@ -64,21 +64,16 @@ pipeline {
                             transfers: [
                                 sshTransfer(
                                     sourceFiles: '**/*',
-                                    excludes: '.git/**, .gitignore, tests/**, test-results/**, phpunit.xml, .env.example, README.md, Jenkinsfile',
+                                    excludes: '.git/**, .gitignore, tests/**, test-results/**, phpunit.xml, README.md, Jenkinsfile',
                                     removePrefix: '',
-                                    remoteDirectory: '/var/www/php-pipeline',
+                                    remoteDirectory: '/var/www/myapp',
                                     execCommand: '''
-                                        cd /var/www/php-pipeline
-                                        echo "=== Deployment Started ==="
+                                        cd /var/www/myapp
+                                        echo "=== Files deployed ==="
                                         ls -la
-                                        
-                                        # Set permissions jika diperlukan
-                                        # chmod -R 755 storage bootstrap/cache
-                                        
-                                        # Jika ada .env, copy dari .env.example
-                                        # cp .env.example .env
-                                        
-                                        echo "=== Deployment Completed ==="
+                                        echo "=== Setting permissions ==="
+                                        chmod -R 755 .
+                                        echo "=== Deployment completed ==="
                                     '''
                                 )
                             ]
